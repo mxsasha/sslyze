@@ -175,6 +175,8 @@ class ServerNetworkConfiguration:
             XMPP protocol.
         smtp_ehlo_hostname: The hostname to set in the SMTP EHLO. If not supplied, the default of "sslyze.scan"
             will be used. Should only be set if the supplied `tls_opportunistic_encryption` is SMTP.
+        http_user_agent: The User-Agent to send in HTTP requests. If not supplied, a default Chrome-like
+            is used that includes the sslyze version.
         network_timeout: The timeout (in seconds) to be used when attempting to establish a connection to the
             server.
         network_max_retries: The number of retries SSLyze will perform when attempting to establish a connection
@@ -187,6 +189,7 @@ class ServerNetworkConfiguration:
 
     xmpp_to_hostname: Optional[str] = None
     smtp_ehlo_hostname: str = "sslyze.scan"
+    http_user_agent: Optional[str] = None
 
     network_timeout: int = 5
     network_max_retries: int = 3
