@@ -69,11 +69,17 @@ class _SmtpHelper(_OpportunisticTlsHelper):
         sock.recv(2048)
 
         # Send a EHLO and wait for the 250 status
-        sock.send(f"EHLO {self._smtp_ehlo_hostname}\r\n".encode("ascii"))
-        data = sock.recv(2048)
-        if b"250 " not in data:
-            raise OpportunisticTlsError(f"SMTP EHLO was rejected: {repr(data)}")
-
+        sock.send(f"EHLO {self._smtp_ehlo_hostname}\r\n".encode("ascii")) 
+        data = sock.recv(2048) 
+        if b"250 " not in data: 
+            # Sometimes this is due to an incomplete read, so try to read more and look for the 250 again
+            try:
+                data += sock.recv(2048, socket.MSG_DONTWAIT) 
+            except socket.error: 
+                pass 
+            if b"250 " not in data: 
+                raise
+                
         # Send a STARTTLS
         sock.send(b"STARTTLS\r\n")
         if b"220" not in sock.recv(2048):
