@@ -78,7 +78,7 @@ class _SmtpHelper(_OpportunisticTlsHelper):
             except socket.error: 
                 pass 
             if b"250 " not in data: 
-                raise
+                raise OpportunisticTlsError(f"SMTP EHLO was rejected: {repr(data)}")
                 
         # Send a STARTTLS
         sock.send(b"STARTTLS\r\n")
